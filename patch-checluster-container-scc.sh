@@ -1,0 +1,1 @@
+oc patch checluster/devspaces --type='merge' --namespace openshift-devspaces -p '{"spec":{"devEnvironments":{"containerBuildConfiguration":{"openShiftSecurityContextConstraint":"nested-podman-scc"}}}}'
