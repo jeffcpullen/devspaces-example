@@ -6,6 +6,7 @@ ARG WORK_DIR="/projects"
 ENV HOME=${USER_HOME_DIR} \
     BUILDAH_ISOLATION=chroot \
     PIP_OPTS=--no-build-isolation
+    PATH=${PATH}:/projects/bin
 
 COPY --chown=0:0 entrypoint.sh /
 
