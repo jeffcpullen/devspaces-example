@@ -43,7 +43,11 @@ data:
       "ansible.executionEnvironment.containerEngine": "podman",
       "git.autofetch": true,
       "ansible.lightspeed.enabled": false,
-      "terminal.integrated.scrollback": 10000
+      "terminal.integrated.scrollback": 10000,
+      "openshiftToolkit.showWelcomePage": false,
+      "openshiftToolkit.searchForToolsInPath": true,
+      "openshiftToolkit.execMaxBufferLength": 10
+
     }
   configurations.json: |
     {
