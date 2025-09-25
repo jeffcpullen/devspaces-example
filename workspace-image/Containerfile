@@ -1,42 +1,46 @@
 FROM registry.access.redhat.com/ubi9/python-311:latest AS pipbuilder
 
-USER root
+ENV PATH=/app/bin:$PATH \
+    PIP_OPTS=--no-build-isolation
 
-RUN dnf install -y libonig-dev
+ADD requirements.txt /opt/app-root/src/requirements.txt
 
-USER default
-
-ADD requirements.txt requirements.txt
-
-ENV PIP_OPTS=--no-build-isolation
-RUN pip install --no-cache-dir -r requirements.txt
+RUN python3 -m venv /opt/app-root/src/app && \
+    source /opt/app-root/src/app/bin/activate && \
+    pip install --no-cache-dir -r /opt/app-root/src/requirements.txt
 
 FROM registry.access.redhat.com/ubi9
 ARG USER_HOME_DIR="/home/user"
 ARG WORK_DIR="/projects"
 
-ENV HOME=${USER_HOME_DIR}
-ENV BUILDAH_ISOLATION=chroot
+ENV PATH=/app/bin:$PATH \
+    HOME=${USER_HOME_DIR} \
+    BUILDAH_ISOLATION=chroot
+
+COPY --chown=0:0 --from=pipbuilder /opt/app-root/src/app /app
 
 COPY --chown=0:0 entrypoint.sh /
 
-RUN dnf --disableplugin=subscription-manager --nodocs --allowerasing install -y openssl git tar shadow-utils bash zsh podman buildah skopeo python3-pip python3.11 python3.11-pip python3-devel aardvark-dns ; \
+RUN dnf --disableplugin=subscription-manager --nodocs --allowerasing install -y openssl git tar shadow-utils bash zsh podman buildah skopeo python3.11-devel python3.11 python3.11-pip aardvark-dns ; \
     dnf update -y ; \
     dnf clean all ; \
     mkdir -p ${WORK_DIR} ; \
-    chgrp -R 0 /home ; \
-    pip3 install podman-compose ; \
-    #
-    # Setup for root-less podman
-    #
-    setcap cap_setuid+ep /usr/bin/newuidmap ; \
+    chgrp -R 0 /home
+
+RUN alternatives --install /usr/bin/python3 python3 /usr/bin/python3.11 1 && \
+    alternatives --install /usr/bin/python python3 /usr/bin/python3.11 1 && \
+    alternatives --install /usr/bin/pip3 pip3 /usr/bin/pip3.11 1 && \
+    alternatives --install /usr/bin/pip pip3 /usr/bin/pip3.11 1
+
+#
+# Setup for root-less podman
+#
+RUN setcap cap_setuid+ep /usr/bin/newuidmap ; \
     setcap cap_setgid+ep /usr/bin/newgidmap ; \
     touch /etc/subgid /etc/subuid ; \
     chown 0:0 /etc/passwd /etc/group /etc/subuid /etc/subgid ; \
     chmod -R g=u /etc/passwd /etc/group /etc/subuid /etc/subgid /home ${WORK_DIR} ; \
     chmod +x /entrypoint.sh
-
-COPY --from=pipbuilder /opt/app-root/lib64/python3.11/site-packages /usr/lib/python3.11/site-packages
 
 WORKDIR ${WORK_DIR}
 ENTRYPOINT ["/usr/libexec/podman/catatonit","--","/entrypoint.sh"]
