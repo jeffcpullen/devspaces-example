@@ -1,23 +1,11 @@
-FROM registry.access.redhat.com/ubi9/python-311:latest AS pipbuilder
-
-ENV PATH=/app/bin:$PATH \
-    PIP_OPTS=--no-build-isolation
-
-ADD requirements.txt /opt/app-root/src/requirements.txt
-
-RUN python3 -m venv /opt/app-root/src/app && \
-    source /opt/app-root/src/app/bin/activate && \
-    pip install --no-cache-dir -r /opt/app-root/src/requirements.txt
 
 FROM registry.access.redhat.com/ubi9
 ARG USER_HOME_DIR="/home/user"
 ARG WORK_DIR="/projects"
 
-ENV PATH=/app/bin:$PATH \
-    HOME=${USER_HOME_DIR} \
-    BUILDAH_ISOLATION=chroot
-
-COPY --chown=0:0 --from=pipbuilder /opt/app-root/src/app /app
+ENV HOME=${USER_HOME_DIR} \
+    BUILDAH_ISOLATION=chroot \
+    PIP_OPTS=--no-build-isolation
 
 COPY --chown=0:0 entrypoint.sh /
 
@@ -26,6 +14,10 @@ RUN dnf --disableplugin=subscription-manager --nodocs --allowerasing install -y 
     dnf clean all ; \
     mkdir -p ${WORK_DIR} ; \
     chgrp -R 0 /home
+
+ADD --chown=0:0 requirements.txt requirements.txt
+
+RUN pip install --no-cache-dir -r requirements.txt
 
 RUN alternatives --install /usr/bin/python3 python3 /usr/bin/python3.9 1 && \
     alternatives --install /usr/bin/python3 python3 /usr/bin/python3.11 50 && \
