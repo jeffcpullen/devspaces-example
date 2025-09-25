@@ -24,5 +24,5 @@ components:
     image: registry.redhat.io/ansible-automation-platform-tech-preview/ansible-devspaces-rhel9:latest
     cpuLimit: 4000m
     cpuRequest: 250m
-    memoryLimit: 4G
+    memoryLimit: 4Gi
     memoryRequest: 128Mi
