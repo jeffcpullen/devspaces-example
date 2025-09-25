@@ -1,0 +1,28 @@
+FROM registry.access.redhat.com/ubi9-minimal
+ARG USER_HOME_DIR="/home/user"
+ARG WORK_DIR="/projects"
+
+ENV HOME=${USER_HOME_DIR}
+ENV BUILDAH_ISOLATION=chroot
+
+COPY --chown=0:0 entrypoint.sh /
+
+RUN microdnf --disableplugin=subscription-manager install -y openssl git tar shadow-utils bash zsh podman buildah skopeo python3-pip python3-devel aardvark-dns ; \
+    microdnf update -y ; \
+    microdnf clean all ; \
+    mkdir -p ${WORK_DIR} ; \
+    chgrp -R 0 /home ; \
+    pip3 install podman-compose ; \
+    #
+    # Setup for root-less podman
+    #
+    setcap cap_setuid+ep /usr/bin/newuidmap ; \
+    setcap cap_setgid+ep /usr/bin/newgidmap ; \
+    touch /etc/subgid /etc/subuid ; \
+    chown 0:0 /etc/passwd /etc/group /etc/subuid /etc/subgid ; \
+    chmod -R g=u /etc/passwd /etc/group /etc/subuid /etc/subgid /home ${WORK_DIR} ; \
+    chmod +x /entrypoint.sh
+
+WORKDIR ${WORK_DIR}
+ENTRYPOINT ["/usr/libexec/podman/catatonit","--","/entrypoint.sh"]
+CMD [ "tail", "-f", "/dev/null" ]

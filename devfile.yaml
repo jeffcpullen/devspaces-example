@@ -21,4 +21,4 @@ components:
         # Ask for an unmasked /proc to be available to this container
         procMount: Unmasked
   container:
-    image: quay.io/cgruver0/che/ocp-4-17-userns-tp:latest
+    image: ansible-automation-platform-tech-preview/ansible-devspaces-rhel9@sha256:881ed51bec1c24894861cbff02fcadf2f9a53cf608ca1ea8cffdc6ee69b71927
