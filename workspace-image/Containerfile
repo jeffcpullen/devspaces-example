@@ -27,10 +27,12 @@ RUN dnf --disableplugin=subscription-manager --nodocs --allowerasing install -y 
     mkdir -p ${WORK_DIR} ; \
     chgrp -R 0 /home
 
-RUN alternatives --install /usr/bin/python3 python3 /usr/bin/python3.11 1 && \
-    alternatives --install /usr/bin/python python3 /usr/bin/python3.11 1 && \
-    alternatives --install /usr/bin/pip3 pip3 /usr/bin/pip3.11 1 && \
-    alternatives --install /usr/bin/pip pip3 /usr/bin/pip3.11 1
+RUN alternatives --install /usr/bin/python3 python3 /usr/bin/python3.9 1 && \
+    alternatives --install /usr/bin/python3 python3 /usr/bin/python3.11 50 && \
+    alternatives --install /usr/bin/python python /usr/bin/python3.9 1 && \
+    alternatives --install /usr/bin/python python /usr/bin/python3.11 50 && \
+    alternatives --install /usr/bin/pip3 pip3 /usr/bin/pip3.11 50 && \
+    alternatives --install /usr/bin/pip pip /usr/bin/pip3.11 50
 
 #
 # Setup for root-less podman
