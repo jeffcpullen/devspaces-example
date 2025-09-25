@@ -9,22 +9,41 @@ data:
   extensions.json: |
     {
       "recommendations": [
-          "dbaeumer.vscode-eslint",
           "redhat.vscode-yaml",
-          "mhutchie.git-graph",
-          "eamodio.gitlens",
-          "streetsidesoftware.code-spell-checker",
-          "johnpapa.winteriscoming",
-          "cnshenj.vscode-task-manager"
+          "ms-python.python",
+          "redhat.ansible",
+          "redhat.vscode-openshift-connector",
+          "ms-python.black-formatter"
       ]
     }
   settings.json: |
     {
-      "workbench.colorTheme": "Winter is Coming (Light)",
-      "workbench.preferredDarkColorTheme": "Winter is Coming (Dark Blue)",
-      "workbench.preferredLightColorTheme": "Winter is Coming (Light)",
       "editor.wordWrap": "on",
       "files.autoSave": "off"
+      "files.associations": {
+          "*.yml": "ansible"
+        },
+      "ansible.ansible.path": "/usr/local/bin/ansible",
+      "ansible.python.interpreterPath": "/usr/bin/python3",
+      "ansible.ansible.useFullyQualifiedCollectionNames": true,
+      "ansible.ansibleNavigator.path": "/usr/local/bin/ansible-navigator",
+      "ansible.completion.provideModuleOptionAliases": true,
+      "ansible.completion.provideRedirectModules": true,
+      "ansible.validation.enabled": true,
+      "ansible.validation.lint.enabled": true,
+      "ansible.validation.lint.path": "/usr/local/bin/ansible-lint",
+      "files.trimTrailingWhitespace": true,
+      "files.trimFinalNewlines": true,
+      "files.insertFinalNewline": true,
+      "ansible.validation.lint.arguments": "--profile production --offline",
+      "[python]": {
+          "editor.defaultFormatter": "ms-python.black-formatter"
+      },
+      "redhat.telemetry.enabled": true,
+      "ansible.executionEnvironment.containerEngine": "podman",
+      "git.autofetch": true,
+      "ansible.lightspeed.enabled": false,
+      "terminal.integrated.scrollback": 10000
     }
   configurations.json: |
     {
