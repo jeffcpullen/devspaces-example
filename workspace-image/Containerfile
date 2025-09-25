@@ -17,14 +17,14 @@ RUN dnf --disableplugin=subscription-manager --nodocs --allowerasing install -y 
 
 ADD --chown=0:0 requirements.txt requirements.txt
 
-RUN pip install --no-cache-dir -r requirements.txt
-
 RUN alternatives --install /usr/bin/python3 python3 /usr/bin/python3.9 1 && \
     alternatives --install /usr/bin/python3 python3 /usr/bin/python3.11 50 && \
     alternatives --install /usr/bin/python python /usr/bin/python3.9 1 && \
     alternatives --install /usr/bin/python python /usr/bin/python3.11 50 && \
     alternatives --install /usr/bin/pip3 pip3 /usr/bin/pip3.11 50 && \
     alternatives --install /usr/bin/pip pip /usr/bin/pip3.11 50
+
+RUN pip install --no-cache-dir -r requirements.txt
 
 #
 # Setup for root-less podman
