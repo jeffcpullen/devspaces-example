@@ -21,7 +21,8 @@ components:
         # Ask for an unmasked /proc to be available to this container
         procMount: Unmasked
   container:
-    image: quay.io/cgruver0/che/ocp-4-17-userns-tp:latest
+    image: quay.io/jpullen0/ansible-devspaces-nested-podman:0.2
+    # image: quay.io/cgruver0/che/ocp-4-17-userns-tp:latest
     cpuLimit: 4000m
     cpuRequest: 250m
     memoryLimit: 4Gi
