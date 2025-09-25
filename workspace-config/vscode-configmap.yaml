@@ -1,0 +1,32 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: vscode-editor-configurations
+  labels:
+     app.kubernetes.io/part-of: che.eclipse.org
+     app.kubernetes.io/component: workspaces-config
+data:
+  extensions.json: |
+    {
+      "recommendations": [
+          "dbaeumer.vscode-eslint",
+          "redhat.vscode-yaml",
+          "mhutchie.git-graph",
+          "eamodio.gitlens",
+          "streetsidesoftware.code-spell-checker",
+          "johnpapa.winteriscoming",
+          "cnshenj.vscode-task-manager"
+      ]
+    }
+  settings.json: |
+    {
+      "workbench.colorTheme": "Winter is Coming (Light)",
+      "workbench.preferredDarkColorTheme": "Winter is Coming (Dark Blue)",
+      "workbench.preferredLightColorTheme": "Winter is Coming (Light)",
+      "editor.wordWrap": "on",
+      "files.autoSave": "off"
+    }
+  configurations.json: |
+    {
+      "extensions.install-from-vsix-enabled": false
+    }
