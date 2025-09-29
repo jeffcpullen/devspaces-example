@@ -4,7 +4,7 @@ schemaVersion: 2.2.0
 attributes:
   controller.devfile.io/storage-type: per-workspace
 metadata:
-  name: nested-containers-demo
+  name: ansible-devspaces-example
 components:
   - name: dev-tools
     attributes:
@@ -27,6 +27,9 @@ components:
       cpuRequest: 250m
       memoryLimit: 4Gi
       memoryRequest: 128Mi
+      env:
+        - name: VSCODE_DEFAULT_WORKSPACE
+          value: /projects/devspaces-example/devspaces.code-workspace
   - name: prep-workspace
     container:
       args:
