@@ -41,5 +41,6 @@ RUN mkdir -p ${USER_HOME_DIR} ; \
     setcap cap_setgid+ep /usr/bin/newgidmap ; \
     chmod +x /entrypoint.sh
 
+USER 1000
 ENTRYPOINT ["/usr/libexec/podman/catatonit","--","/entrypoint.sh"]
 CMD [ "tail", "-f", "/dev/null" ]
