@@ -1,7 +1,5 @@
-
 FROM registry.access.redhat.com/ubi9
 ARG USER_HOME_DIR="/home/user"
-ARG WORK_DIR="/projects"
 
 ENV HOME=${USER_HOME_DIR} \
     BUILDAH_ISOLATION=chroot \
@@ -31,13 +29,18 @@ RUN pip install --no-cache-dir -r requirements.txt
 #
 # Setup for root-less podman
 #
-RUN setcap cap_setuid+ep /usr/bin/newuidmap ; \
+RUN mkdir -p ${USER_HOME_DIR} ; \
+    mkdir -p ${USER_HOME_DIR}/.config/containers ; \
+    (echo '[storage]';echo 'driver = "overlay"';echo 'graphroot = "/tmp/graphroot"';echo '[storage.options.overlay]';echo 'mount_program = "/usr/bin/fuse-overlayfs"') > ${USER_HOME_DIR}/.config/containers/storage.conf ; \
+    chown -R 1000:1000 ${USER_HOME_DIR} ; \
+    echo "user:x:1000:0:devspaces user:${USER_HOME_DIR}:/bin/bash" >> /etc/passwd ; \
+    echo "user:x:1000:" >> /etc/group ; \
+    echo "user:1001:64535" >> /etc/subuid ; \
+    echo "user:1001:64535" >> /etc/subgid ; \
+    setcap cap_setuid+ep /usr/bin/newuidmap ; \
     setcap cap_setgid+ep /usr/bin/newgidmap ; \
-    touch /etc/subgid /etc/subuid ; \
-    chown 0:0 /etc/passwd /etc/group /etc/subuid /etc/subgid ; \
-    chmod -R g=u /etc/passwd /etc/group /etc/subuid /etc/subgid /home ${WORK_DIR} ; \
     chmod +x /entrypoint.sh
 
-WORKDIR ${WORK_DIR}
+USER 1000
 ENTRYPOINT ["/usr/libexec/podman/catatonit","--","/entrypoint.sh"]
 CMD [ "tail", "-f", "/dev/null" ]
