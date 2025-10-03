@@ -1,1 +1,0 @@
-oc patch checluster/devspaces --type='merge' --namespace openshift-devspaces -p '{"spec":{"devEnvironments":{"defaultComponents":[{"name":"dev-tools","container":{"image":"quay.io/cgruver0/che/dev-tools:latest","memoryLimit":"6Gi","mountSources":true}}]}}}'

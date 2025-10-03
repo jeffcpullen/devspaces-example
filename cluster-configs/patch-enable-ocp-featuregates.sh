@@ -1,1 +1,0 @@
-oc patch FeatureGate cluster --type merge --patch '{"spec":{"featureSet":"CustomNoUpgrade","customNoUpgrade":{"enabled":["ProcMountType","UserNamespacesSupport","UserNamespacesPodSecurityStandards"]}}}'

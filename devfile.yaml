@@ -5,6 +5,19 @@ attributes:
   controller.devfile.io/storage-type: per-workspace
 metadata:
   name: ansible-devspaces-example
+# You can store your devfile in one repository, and then add additional repositories
+# as shown below to be automatically added into your workspace
+# projects:
+#   - name: sample-collection-repo
+#     git:
+#       remotes:
+#         origin: 'https://github.com/ansible-collections/kubernetes.core'
+#   - name: sample-multi-repo-project
+#     git:
+#       remotes:
+#         origin: 'https://github.com/containers/podman'
+#       checkoutFrom:
+#         revision: main
 components:
   - name: dev-tools
     attributes:
